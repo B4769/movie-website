@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Movie Website</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+  integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+
+</head>
+<body onload="onLoadFunction()" style="background-color:rgb(46, 44, 44);">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+  crossorigin="anonymous"></script>
+  <header>
+    <h1 style="text-align: center;">Well come to YtS movie center</h1>
+    <h2>Search your best movie</h2>
+    
+    <input type="text" id="searchInput" placeholder="Search movies...">   
+    <button onclick="searchMovies()">Search</button>
+    
+  </header>
+
+  <section id="moviesSection">
+    <h2>Movies</h2>
+    <div id="moviesContainer"></div>
+  </section>
+
+  <section id="seriesSection">
+    <h2>Series</h2>
+    <div id="seriesContainer"></div>
+  </section>
+
+  <section id="tvShowsSection">
+    <h2>TV Shows</h2>
+    <div id="tvShowsContainer"></div>
+  </section>
+
+  <section id="trendingSection">
+    <h2>Trending Movies</h2>
+    <div id="trendingContainer"></div>
+  </section>
+
+<style>
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+header {
+  background-color: #191818;
+  padding: 20px;
+  color: white;
+  text-align: center;
+
+}
+
+h1 {
+  margin: 0;
+}
+
+#searchInput {
+  padding: 5px;
+}
+
+button {
+  padding: 5px 10px;
+  margin-left: 10px;
+}
+
+section {
+  margin-top: 20px;
+}
+
+h2 {
+  margin-bottom: 10px;
+  color: aliceblue;
+  box-sizing: border-box;
+  text-align: center;
+  padding: 20px;
+}
+
+.movie {
+  display: inline-block;
+  width: 200px;
+  margin-right: 10px;
+  background-color: rgb(35, 48, 48);
+}
+
+.movie img {
+  width: 100%;
+  background-color: #333;
+}
+
+.movie h3 {
+  margin-top: 5px;
+  color: rgb(116, 114, 111);
+}
+
+.series {
+  display: inline-block;
+  width: 200px;
+  margin-right: 10px;
+  background-color: rgb(71, 75, 79);
+}
+
+.series img {
+  width: 100%;
+  
+}
+
+.series h3 {
+  margin-top: 5px;
+}
+
+.tvShow {
+  display: inline-block;
+  width: 200px;
+  margin-right: 10px;
+  background-color: rgb(157, 185, 210);
+}
+
+.tvShow img {
+  width: 100%;
+}
+
+.tvShow h3 {
+  margin-top: 5px;
+}
+
+.trending {
+  display: inline-block;
+  width: 200px;
+  margin-right: 10px;
+  background-color: azure;
+  background:rgb(158, 154, 151);
+  padding: auto;
+}
+
+.trending img {
+  width: 100%;
+}
+
+.trending h3 {
+  margin-top: 5px;
+}
+
+</style>
+<script>
+
+const apiKey = "75abf8e4d6c765579a0c31bc847d636b";
+const baseUrl = "https://api.themoviedb.org/3";
+
+function onLoadFunction() {
+  getMovies();
+  getSeries();
+  getTVShows();
+  getTrendingMovies();
+  getseries();
+}
+
+
+
+function searchMovies() {
+  const searchInput = document.getElementById("searchInput").value;
+  if (searchInput !== "") {
+    const url = `${baseUrl}/search/movie?api_key=${apiKey}&query=${searchInput}`;
+    fetch(url)
+      .then(response => response.json())
+      .then(data => displayMovies(data.results))
+      .catch(error => console.log(error));
+  }
+}
+
+
+function getMovies() {
+  const url = `${baseUrl}/movie/popular?api_key=${apiKey}`;
+  fetch(url)
+    .then(response => response.json())
+    .then(data => displayMovies(data.results))
+    .catch(error => console.log(error));
+}
+
+function displayMovies(movies) {
+  const moviesContainer = document.getElementById("moviesContainer");
+  moviesContainer.innerHTML = "";
+  
+  movies.forEach(movie => {
+    const movieDiv = document.createElement("div");
+    movieDiv.classList.add("movie");
+  
+    const image = document.createElement("img");
+    image.src = `https://image.tmdb.org/t/p/w500/${movie.poster_path}`;
+  
+    const title = document.createElement("h3");
+    title.textContent = movie.title;
+  
+    movieDiv.appendChild(image);
+    movieDiv.appendChild(title);
+  
+    moviesContainer.appendChild(movieDiv);
+  });
+}
+
+function getSeries() {
+  const url = `${baseUrl}/tv/popular?api_key=${apiKey}`;
+  fetch(url)
+    .then(response => response.json())
+    .then(data => displaySeries(data.results))
+    .catch(error => console.log(error));
+}
+
+function displaySeries(series) {
+  const seriesContainer = document.getElementById("seriesContainer");
+  seriesContainer.innerHTML = "";
+  
+  series.forEach(serie => {
+    const serieDiv = document.createElement("div");
+    serieDiv.classList.add("series");
+  
+    const image = document.createElement("img");
+    image.src = `https://image.tmdb.org/t/p/w500/${serie.poster_path}`;
+
+const title = document.createElement("h3");
+title.textContent = serie.name;
+
+serieDiv.appendChild(image);
+serieDiv.appendChild(title);
+
+seriesContainer.appendChild(serieDiv);
+}); }
+
+function getTVShows() {
+     const url = `${baseUrl}/tv/top_rated?api_key=${apiKey}`; 
+     fetch(url)
+      .then(response => response.json())
+       .then(data => displayTVShows(data.results)) 
+       .catch(error => console.log(error)); 
+     }
+
+function displayTVShows(tvShows) { 
+    const tvShowsContainer = document.getElementById("tvShowsContainer"); 
+    tvShowsContainer.innerHTML = "";
+
+tvShows.forEach(tvShow => {
+     const tvShowDiv = document.createElement("div");
+      tvShowDiv.classList.add("tvShow");
+
+const image = document.createElement("img");
+image.src = `https://image.tmdb.org/t/p/w500/${tvShow.poster_path}`;
+
+const title = document.createElement("h3");
+title.textContent = tvShow.name;
+
+tvShowDiv.appendChild(image);
+tvShowDiv.appendChild(title);
+
+tvShowsContainer.appendChild(tvShowDiv);
+}); 
+}
+
+function getTrendingMovies() { 
+    const url = `${baseUrl}/trending/movie/week?api_key=${apiKey}`; 
+    fetch(url)
+     .then(response => response.json()) 
+     .then(data => displayTrendingMovies(data.results)) 
+     .catch(error => console.log(error)); 
+    }
+
+function displayTrendingMovies(movies) { 
+    const trendingContainer = document.getElementById("trendingContainer");
+     trendingContainer.innerHTML = "";
+
+movies.forEach(movie => {
+     const movieDiv = document.createElement("div"); 
+     movieDiv.classList.add("trending");
+
+const image = document.createElement("img");
+image.src = `https://image.tmdb.org/t/p/w500/${movie.poster_path}`;
+
+const title = document.createElement("h3");
+title.textContent = movie.title;
+
+movieDiv.appendChild(image);
+movieDiv.appendChild(title);
+
+trendingContainer.appendChild(movieDiv);
+});
+ } 
+</script>
+
+</body> 
+</html>  
